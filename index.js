@@ -100,16 +100,27 @@ function fetchValueAtPath (path) {
     .catch(err => console.log('failed to fetch value at ' + path, err) || null)
 }
 
-const args = qs.parse(window.location.search)
+function handleArgs () {
+  const args = qs.parse(window.location.search)
 
-var summa = args.summa || args.host
-if (summa[summa.length - 1] === '/') {
-  summa = summa.slice(0, -1)
-}
-if (summa.slice(0, 4) !== 'http') {
-  summa = 'http://' + summa
+  var summa = args.summa || args.host
+  if (!summa) {
+    summa = 'https://summadb-temp.herokuapp.com'
+    document.getElementById('target').innerHTML = 'append <code>?summa=your-db-url</code> to the URL of this page to inspect any SummaDB instance.<br>'
+  } else {
+    if (summa[summa.length - 1] === '/') {
+      summa = summa.slice(0, -1)
+    }
+    if (summa.slice(0, 4) !== 'http') {
+      summa = window.location.protocol + '//' + summa
+    }
+  }
+  document.getElementById('target').innerHTML += `browsing <code>${summa}</code>.`
+
+  return {summa}
 }
 
+const {summa} = handleArgs()
 fetchKeysAtPath('')
   .then(rows =>
     ReactDOM.render(<View path='' lastKey='~' children={rows} />, document.getElementById('main'))

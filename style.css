@@ -1,3 +1,8 @@
+#target {
+  margin-bottom: 4px;
+}
+
+#target,
 #main {
   width: 950px;
   margin-left: auto;

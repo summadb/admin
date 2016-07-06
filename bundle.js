@@ -134,15 +134,29 @@ function fetchValueAtPath(path) {
   });
 }
 
-var args = _queryString2.default.parse(window.location.search);
+function handleArgs() {
+  var args = _queryString2.default.parse(window.location.search);
 
-var summa = args.summa || args.host;
-if (summa[summa.length - 1] === '/') {
-  summa = summa.slice(0, -1);
+  var summa = args.summa || args.host;
+  if (!summa) {
+    summa = 'https://summadb-temp.herokuapp.com';
+    document.getElementById('target').innerHTML = 'append <code>?summa=your-db-url</code> to the URL of this page to inspect any SummaDB instance.<br>';
+  } else {
+    if (summa[summa.length - 1] === '/') {
+      summa = summa.slice(0, -1);
+    }
+    if (summa.slice(0, 4) !== 'http') {
+      summa = window.location.protocol + '//' + summa;
+    }
+  }
+  document.getElementById('target').innerHTML += 'browsing <code>' + summa + '</code>.';
+
+  return { summa: summa };
 }
-if (summa.slice(0, 4) !== 'http') {
-  summa = 'http://' + summa;
-}
+
+var _handleArgs = handleArgs();
+
+var summa = _handleArgs.summa;
 
 fetchKeysAtPath('').then(function (rows) {
   return _reactDom2.default.render(_react2.default.createElement(View, { path: '', lastKey: '~', children: rows }), document.getElementById('main'));
