@@ -78,7 +78,7 @@ var View = function (_React$Component) {
       var _this3 = this;
 
       var key = this.props.lastKey;
-      var directLink = '/?summa=' + summa + this.props.path;
+      var directLink = root + '?summa=' + summa + this.props.path;
 
       var label = _react2.default.createElement(
         'span',
@@ -88,7 +88,7 @@ var View = function (_React$Component) {
           { className: 'node', onClick: this.handleClick.bind(this) },
           key
         ),
-        directLink !== window.location.pathname + window.location.search ? _react2.default.createElement(
+        this.props.path !== '' ? _react2.default.createElement(
           'a',
           { className: 'tree-link', href: directLink },
           '➽'
@@ -149,6 +149,7 @@ function fetchValueAtPath(path) {
 
 function handleArgs() {
   var args = _queryString2.default.parse(window.location.search);
+  var root = window.location.pathname;
 
   var summa = args.summa || args.host;
   if (!summa) {
@@ -164,12 +165,13 @@ function handleArgs() {
   }
   document.getElementById('target').innerHTML += 'browsing <code>' + summa + '</code>.';
 
-  return { summa: summa };
+  return { summa: summa, root: root };
 }
 
 var _handleArgs = handleArgs();
 
 var summa = _handleArgs.summa;
+var root = _handleArgs.root;
 
 
 Promise.all([fetchKeysAtPath(''), fetchValueAtPath('')]).then(function (_ref) {

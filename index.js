@@ -41,12 +41,12 @@ class View extends React.Component {
 
   render () {
     let key = this.props.lastKey
-    let directLink = `/?summa=${summa}${this.props.path}`
+    let directLink = root + '?summa=' + summa + this.props.path
 
     let label = (
       <span>
         <span className='node' onClick={this.handleClick.bind(this)}>{key}</span>
-        {directLink !== window.location.pathname + window.location.search
+        {this.props.path !== ''
           ? <a className='tree-link' href={directLink}>➽</a>
           : null
         }
@@ -108,6 +108,7 @@ function fetchValueAtPath (path) {
 
 function handleArgs () {
   const args = qs.parse(window.location.search)
+  const root = window.location.pathname
 
   var summa = args.summa || args.host
   if (!summa) {
@@ -123,10 +124,10 @@ function handleArgs () {
   }
   document.getElementById('target').innerHTML += `browsing <code>${summa}</code>.`
 
-  return {summa}
+  return {summa, root}
 }
 
-const {summa} = handleArgs()
+const {summa, root} = handleArgs()
 
 Promise.all([
   fetchKeysAtPath(''),
