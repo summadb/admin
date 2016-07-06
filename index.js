@@ -9,8 +9,9 @@ class View extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      open: false,
-      children: props.children
+      open: props.children && props.value !== undefined,
+      children: props.children,
+      value: props.value
     }
   }
 
@@ -126,7 +127,12 @@ function handleArgs () {
 }
 
 const {summa} = handleArgs()
-fetchKeysAtPath('')
-  .then(rows =>
-    ReactDOM.render(<View path='' lastKey='~' children={rows} />, document.getElementById('main'))
+
+Promise.all([
+  fetchKeysAtPath(''),
+  fetchValueAtPath('')
+])
+  .then(([rows, value]) =>
+    ReactDOM.render(<View path='' lastKey='~' children={rows} value={value} />,
+                    document.getElementById('main'))
   )

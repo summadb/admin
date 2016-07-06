@@ -1,6 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -38,8 +40,9 @@ var View = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(View).call(this, props));
 
     _this.state = {
-      open: false,
-      children: props.children
+      open: props.children && props.value !== undefined,
+      children: props.children,
+      value: props.value
     };
     return _this;
   }
@@ -168,8 +171,13 @@ var _handleArgs = handleArgs();
 
 var summa = _handleArgs.summa;
 
-fetchKeysAtPath('').then(function (rows) {
-  return _reactDom2.default.render(_react2.default.createElement(View, { path: '', lastKey: '~', children: rows }), document.getElementById('main'));
+
+Promise.all([fetchKeysAtPath(''), fetchValueAtPath('')]).then(function (_ref) {
+  var _ref2 = _slicedToArray(_ref, 2);
+
+  var rows = _ref2[0];
+  var value = _ref2[1];
+  return _reactDom2.default.render(_react2.default.createElement(View, { path: '', lastKey: '~', children: rows, value: value }), document.getElementById('main'));
 });
 
 },{"query-string":30,"react":172,"react-dom":31,"react-treeview":32}],2:[function(require,module,exports){
