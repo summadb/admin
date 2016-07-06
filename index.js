@@ -39,7 +39,7 @@ class View extends React.Component {
   }
 
   render () {
-    let key = this.props.path.split('/').slice(-1)[0] || '~'
+    let key = this.props.lastKey
 
     let label = (
       <span className='node' onClick={this.handleClick.bind(this)}>
@@ -48,7 +48,7 @@ class View extends React.Component {
     )
 
     let value = this.state.value ? [(
-      <span className='tree-value'>
+      <span className='tree-value' key='_val'>
         {this.state.value}
       </span>
     )] : []
@@ -66,7 +66,8 @@ class View extends React.Component {
               this.state.children
                 ? this.state.children.map(child =>
                   <View
-                    path={this.props.path + '/' + child.key}
+                    path={this.props.path + '/' + child.key.replace(/ /g, '+')}
+                    lastKey={child.key}
                     key={child.key}
                   />
                 )
@@ -111,5 +112,5 @@ if (summa.slice(0, 4) !== 'http') {
 
 fetchKeysAtPath('')
   .then(rows =>
-    ReactDOM.render(<View path='' key='~' children={rows} />, document.getElementById('main'))
+    ReactDOM.render(<View path='' lastKey='~' children={rows} />, document.getElementById('main'))
   )
