@@ -1,0 +1,115 @@
+/* eslint no-unused-vars: 0 */
+
+import React from 'react'
+import ReactDOM from 'react-dom'
+import TreeView from 'react-treeview'
+import qs from 'query-string'
+
+class View extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      open: false,
+      children: props.children
+    }
+  }
+
+  handleClick () {
+    this.setState({
+      open: !this.state.open
+    })
+
+    if (typeof this.state.children === 'undefined') {
+      fetchKeysAtPath(this.props.path)
+        .then(rows => {
+          this.setState({
+            children: rows
+          })
+        })
+    }
+
+    if (typeof this.state.value === 'undefined') {
+      fetchValueAtPath(this.props.path)
+        .then(val => {
+          this.setState({
+            value: val
+          })
+        })
+    }
+  }
+
+  render () {
+    let key = this.props.path.split('/').slice(-1)[0] || '~'
+
+    let label = (
+      <span className='node' onClick={this.handleClick.bind(this)}>
+        {key}
+      </span>
+    )
+
+    let value = this.state.value ? [(
+      <span className='tree-value'>
+        {this.state.value}
+      </span>
+    )] : []
+
+    return (
+      <div>
+        <TreeView
+          key={key}
+          nodeLabel={label}
+          collapsed={!this.state.open}
+          onClick={this.handleClick.bind(this)}
+        >
+          {
+            value.concat(
+              this.state.children
+                ? this.state.children.map(child =>
+                  <View
+                    path={this.props.path + '/' + child.key}
+                    key={child.key}
+                  />
+                )
+                : null
+            )
+          }
+        </TreeView>
+      </div>
+    )
+  }
+}
+
+function fetchKeysAtPath (path) {
+  return window.fetch(summa + path + '/_all_docs')
+    .then(res => res.json())
+    .then(body => {
+      if (body.rows) return body.rows
+      else throw body
+    })
+    .catch(err => console.log('failed to fetch keys at ' + path, err) || [])
+}
+
+function fetchValueAtPath (path) {
+  return window.fetch(summa + path + '/_val')
+    .then(res => res.json())
+    .then(val => {
+      if (typeof val === 'object') throw val
+      else return val
+    })
+    .catch(err => console.log('failed to fetch value at ' + path, err) || null)
+}
+
+const args = qs.parse(window.location.search)
+
+var summa = args.summa || args.host
+if (summa[summa.length - 1] === '/') {
+  summa = summa.slice(0, -1)
+}
+if (summa.slice(0, 4) !== 'http') {
+  summa = 'http://' + summa
+}
+
+fetchKeysAtPath('')
+  .then(rows =>
+    ReactDOM.render(<View path='' key='~' children={rows} />, document.getElementById('main'))
+  )

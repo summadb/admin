@@ -1,0 +1,49 @@
+{
+  "name": "summadb-gui-interface",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-js": "browserifyinc index.js > bundle.js",
+    "build-html": "cat prebundle.html > bundle.html && echo '<style>' >> bundle.html && cat style.css >> bundle.html && echo '</style><script>' >> bundle.html && cat bundle.js >> bundle.html && echo '</script>' >> bundle.html",
+    "build": "npm run build-js",
+    "live": "ls *.js | entr fish -c 'settitle \"compiling...\"; and npm run build; and echo \"done!\"; and settitle \"done.\"'"
+  },
+  "keywords": [
+    "summadb",
+    "summa",
+    "futon",
+    "fauxton",
+    "interface",
+    "admin",
+    "gui",
+    "spa"
+  ],
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
+  "author": "Giovanni T. Parra",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "query-string": "^4.2.2",
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0",
+    "react-treeview": "^0.4.5"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "browserify-incremental": "^3.1.1"
+  }
+}
