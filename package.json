@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "build-js": "browserifyinc index.js > bundle.js",
-    "build-html": "cat prebundle.html > bundle.html && echo '<style>' >> bundle.html && cat style.css >> bundle.html && echo '</style><script>' >> bundle.html && cat bundle.js >> bundle.html && echo '</script>' >> bundle.html",
     "build": "npm run build-js",
     "live": "ls *.js | entr fish -c 'settitle \"compiling...\"; and npm run build; and echo \"done!\"; and settitle \"done.\"'"
   },
@@ -17,7 +16,7 @@
     "interface",
     "admin",
     "gui",
-    "spa"
+    "utils"
   ],
   "browserify": {
     "transform": [
