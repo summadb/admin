@@ -40,10 +40,15 @@ class View extends React.Component {
 
   render () {
     let key = this.props.lastKey
+    let directLink = `/?summa=${summa}${this.props.path}`
 
     let label = (
-      <span className='node' onClick={this.handleClick.bind(this)}>
-        {key}
+      <span>
+        <span className='node' onClick={this.handleClick.bind(this)}>{key}</span>
+        {directLink !== window.location.pathname + window.location.search
+          ? <a className='tree-link' href={directLink}>➽</a>
+          : null
+        }
       </span>
     )
 

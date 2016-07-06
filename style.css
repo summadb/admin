@@ -27,6 +27,12 @@
   height: 0px;
 }
 
+.tree-link {
+  margin-left: 4px;
+  text-decoration: none;
+  color: inherit;
+}
+
 .tree-value {
   width: 15px;
   color: gray;

@@ -75,11 +75,21 @@ var View = function (_React$Component) {
       var _this3 = this;
 
       var key = this.props.lastKey;
+      var directLink = '/?summa=' + summa + this.props.path;
 
       var label = _react2.default.createElement(
         'span',
-        { className: 'node', onClick: this.handleClick.bind(this) },
-        key
+        null,
+        _react2.default.createElement(
+          'span',
+          { className: 'node', onClick: this.handleClick.bind(this) },
+          key
+        ),
+        directLink !== window.location.pathname + window.location.search ? _react2.default.createElement(
+          'a',
+          { className: 'tree-link', href: directLink },
+          '➽'
+        ) : null
       );
 
       var value = this.state.value ? [_react2.default.createElement(
